@@ -15,8 +15,8 @@ object Twitter2Tumblr {
 
   def main(args: Array[String]) {
     require(args.length == 3)
-    val name = args(0) // twitter and tumblr name (assuming they are the same)
-    val email = args(1) // tumblr email
+    val name = args(0)     // twitter and tumblr name (assuming they are the same)
+    val email = args(1)    // tumblr email
     val password = args(2) // tumblr password
 
     val twitterUrl = "http://api.twitter.com/1/statuses/user_timeline.atom?screen_name=%s&count=200".format(name)
@@ -50,6 +50,9 @@ object Twitter2Tumblr {
     println(content)
     println(published)
     println(source)
+
+    // ignore if the tweet is posted from tumblr
+    if (content.contains("http://tumblr.com/")) return
 
     val httpClient = new DefaultHttpClient
     val httpPost = new HttpPost(url)
