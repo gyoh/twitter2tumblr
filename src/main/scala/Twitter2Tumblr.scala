@@ -15,7 +15,7 @@ object Twitter2Tumblr {
 
   def main(args: Array[String]) {
     require(args.length == 3)
-    val name = args(0) // twitter and tumblr name (assuming they are same)
+    val name = args(0) // twitter and tumblr name (assuming they are the same)
     val email = args(1) // tumblr email
     val password = args(2) // tumblr password
 
