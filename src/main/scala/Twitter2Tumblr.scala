@@ -46,7 +46,11 @@ object Twitter2Tumblr {
   def write(url: String, entry: Node, name: String, email: String, password: String) {
     val content = (entry \ "content").text.replace("%s: ".format(name), "")
     val published = (entry \ "published").text
-    val source = (entry \ "source").text
+    val s = (entry \ "source").text
+    val source = s match {
+      case "web" => s
+      case _ => (XML.loadString(s) \\ "a").text // strip off <a> tag
+    }
     println(content)
     println(published)
     println(source)
