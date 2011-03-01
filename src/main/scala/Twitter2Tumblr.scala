@@ -15,8 +15,8 @@ object Twitter2Tumblr {
 
   def main(args: Array[String]) {
     require(args.length == 3)
-    val name = args(0)     // twitter and tumblr name (assuming they are same)
-    val email = args(1)    // tumblr email
+    val name = args(0) // twitter and tumblr name (assuming they are same)
+    val email = args(1) // tumblr email
     val password = args(2) // tumblr password
 
     val twitterUrl = "http://api.twitter.com/1/statuses/user_timeline.atom?screen_name=%s&count=200".format(name)
@@ -26,28 +26,28 @@ object Twitter2Tumblr {
     val entries = nodes(twitterUrl, _ \\ "entry")
 
     // post each tweet to tumblr
-    entries.foreach(entry => write(tumblrUrl, entry, name, email, password))
+    entries.foreach(write(tumblrUrl, _, name, email, password))
   }
 
-	// read and parse atom feed
-	def read(url: String) = {
-		val src = Source.fromURL(url)("UTF-8")
-	  try {
-	    XML.loadString(src.getLines.mkString)
-	  } finally {
-	    src.close()
+  // read and parse atom feed
+  def read(url: String) = {
+    val src = Source.fromURL(url)("UTF-8")
+    try {
+      XML.loadString(src.getLines.mkString)
+    } finally {
+      src.close()
     }
   }
 
   // get xml nodes
-	def nodes(url: String, op: Elem => NodeSeq) = op(read(url))
+  def nodes(url: String, op: Elem => NodeSeq) = op(read(url))
 
-	// write to tumblr
-	def write(url: String, entry: Node, name: String, email: String, password: String) {
+  // write to tumblr
+  def write(url: String, entry: Node, name: String, email: String, password: String) {
     val content = (entry \ "content").text.replace("%s: ".format(name), "")
     val published = (entry \ "published").text
     val source = (entry \ "source").text
-		println(content)
+    println(content)
     println(published)
     println(source)
 
@@ -67,7 +67,7 @@ object Twitter2Tumblr {
     )
 
     // convert scala Iterable to java List
-    val httpParams = new java.util.ArrayList[NameValuePair]()
+    val httpParams = new java.util.ArrayList[NameValuePair]
     params.map(pair => httpParams.add(new BasicNameValuePair(pair._1, pair._2)))
 
     httpPost.setEntity(new UrlEncodedFormEntity(httpParams, "UTF-8"))
