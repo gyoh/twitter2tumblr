@@ -84,13 +84,14 @@ object Twitter2Tumblr {
     val httpResponse = httpClient.execute(httpPost)
     val statusLine = httpResponse.getStatusLine
     val statusCode = statusLine.getStatusCode
-    val result = new BufferedHttpEntity(httpResponse.getEntity).getContent
-
-    statusCode match {
-      case 201 => println("Success! The new post ID is %s".format(
-        Source.fromInputStream(result).mkString))
-      case 403 => println("Bad email or password")
-      case _ => println("Error: %s".format(statusLine))
+    val result = statusCode match {
+      case 201 =>
+        val c = new BufferedHttpEntity(httpResponse.getEntity).getContent
+        "Success! The new post ID is %s".format(
+          Source.fromInputStream(c).mkString)
+      case 403 => "Bad email or password"
+      case _ => "Error: %s".format(statusLine)
     }
+    println(result)
   }
 }
